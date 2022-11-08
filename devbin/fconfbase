@@ -1,0 +1,88 @@
+#!/bin/bash
+
+function handle_invalid_file () {
+	
+	DPATH=$1
+	FILE=$2
+	OPTION=$3
+
+	existing_files=($(ls -a $DPATH | tail -n +3))
+	
+	# list available files
+	echo ""
+	echo "Availlable Files:"
+	echo ""
+	for file in "${existing_files[@]}"; do
+		for i in "${!existing_files[@]}"; do
+			if [[ "${existing_files[$i]}" == "$file" ]]; then
+				index="$i"
+			fi
+		done
+		echo "$(($index + 1)))  ${file}"
+	done
+
+	# Get Valid Input
+	
+	amount_of_files=${#existing_files[@]}
+	invalid_file="true"
+	
+	echo ""
+	while [[ "$invalid_file" == "true" ]]; 
+	do
+	
+		read -p "Enter file to edit: " file_idx
+		
+		# Check if good input
+		valid_input=(seq 1 $(($amount_of_files)))
+		if [[ $(($file_idx )) -le 0 || $(($file_idx)) -gt $(($amount_of_files)) ]]; then
+			echo ""
+			echo "Invalid File Index."
+			echo ""
+		else
+			FILE="${existing_files[$((file_idx - 1))]}"
+			echo "You have chosen ${FILE}"
+			invalid_file="false"
+		fi
+	done	
+
+	file_action $DPATH $FILE $OPTION
+}
+
+function handle_no_file_input () {
+	echo ""
+	echo "No file specified!"
+}
+
+function conf_main () {
+
+	DPATH="$1"
+	FILE="$3"
+	OPTION="$2"
+	
+	[[ "$FILE" == "#NONE#" ]] && handle_no_file_input $FILE $DPATH && handle_invalid_file $DPATH $FILE $OPTION
+	[[ ! -f "${DPATH}/${FILE}" ]] && handle_invalid_file $DPATH $FILE $OPTION
+	file_action $DPATH $FILE $OPTION
+}
+
+function file_action () {
+	
+	FPATH=$1/$2
+	OPTION="$3"
+	case "$OPTION" in
+		"edit")
+			vim $FPATH
+			exit 1
+			;;
+		"show")
+			cat $FPATH
+			exit 1
+			;;
+		*)
+			echo "Bad request: \'${OPTION}\' is not a valid Option"
+			exit 2
+			;;
+	esac
+}
+
+
+

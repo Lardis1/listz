@@ -1,0 +1,5 @@
+#!/bin/sh
+
+EXECUTABLEDIR="$(LPD)/src/main/"
+
+$EXECUTABLEDIR/MAIN

@@ -1,0 +1,12 @@
+[ pacman ]
+networkmanager
+wireless_tools
+net-tools
+aircrack-ng
+mdk4
+nmap
+
+[ Python ]
+pandas (ex)
+
+

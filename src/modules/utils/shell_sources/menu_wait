@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function menu_wait () {
+	sleep 0.4
+	clear
+	sleep 0.2
+}

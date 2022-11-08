@@ -1,0 +1,11 @@
+#!/bin/bash
+
+source $(LPD)/devbin/fconfbase
+
+DPATH=$(LPD)/src/modules/utils/shell_sources 
+OPTION="edit"
+
+FILE=$1
+[[ -z "$1" ]] && FILE="#NONE#"
+
+conf_main $DPATH $OPTION $FILE

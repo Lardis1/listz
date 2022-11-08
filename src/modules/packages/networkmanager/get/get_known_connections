@@ -1,0 +1,86 @@
+#!/bin/bash
+
+
+source $(LPD)/src/env/shell_sources/colors
+
+function display_connections_list () {
+	
+	IFS=$'\n'
+	
+	num_of_connections="${#CONNECTIONS[@]}"
+	result=""
+	count=1
+	
+	ACTIVE_CONNECTIONS=($(get_active_connections))
+	INACTIVE_CONNECTIONS=($(get_all_inactive_connections))
+	
+	for connection in "${ACTIVE_CONNECTIONS[@]}"
+	do
+		# display_con $con $style $count
+		STYLE=${BOLD}${LIGHTGREEN}
+		print_con_list_item $connection $STYLE $count
+		count=$((count + 1))
+	done
+
+	for connection in "${INACTIVE_CONNECTIONS[@]}"
+	do
+		STYLE=${YELLOW}
+		print_con_list_item $connection $STYLE $count
+		count=$((count + 1))
+	done
+}
+
+function print_con_list_item () {
+
+	CON=$1
+	STYLE=$2
+	COUNT=$3
+
+	echo -e "  ${STYLE}${COUNT}) ${CON}${NC}"
+}
+
+
+function get_active_connections () {
+	IFS=$'\n'
+	CONNECTIONS=($(nmcli -t -f NAME con))
+	ACTIVE_CONNECTIONS=()
+	for con in "${CONNECTIONS[@]}"
+	do
+		active=$(connection_is_active ${con})
+		if [[ ! -z "$active" ]]
+		then
+			echo "$con"
+		fi
+	done
+}
+
+function get_all_inactive_connections () {
+	IFS=$'\n'	
+	CONNECTIONS=($(nmcli -t -f NAME con))
+	INACTIVE_CONNECTIONS=()
+	for con in "${CONNECTIONS[@]}"
+	do
+		active=$(connection_is_active ${con})
+		if [[ -z "$active" ]]
+		then
+			echo "$con"
+		fi
+	done
+}
+
+
+# function get_unavaillable_connections () {
+	# To Do
+# }
+
+# function get_inactive_but_availlable_connections () {
+	
+# }
+
+function connection_is_active () {
+
+	CONNECTION=$1
+	nmcli con show --active | grep $CONNECTION
+}
+
+

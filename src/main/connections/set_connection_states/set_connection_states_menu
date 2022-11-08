@@ -1,0 +1,70 @@
+#!/bin/bash
+
+function set_connection_states_menu () {
+
+	display_set_connection_states_options
+	read -p "$CON_STATES_PROMPT" CHOICE
+	handle_set_connection_states_input $CHOICE
+}
+
+function display_set_connection_states_options () {
+	echo "                                             "
+	echo "  SET CONNECTION STATES MENU                 "
+	echo "_____________________________________________"
+	echo "                                             "
+	echo " 1)  Activate A Connection                   "
+	echo " 2)  Disable A Connection                    "
+	echo " 3)  Disable All Connections                 "
+	echo " 4)  Set Single Connection As Up             "
+	echo "_____________________________________________"
+	echo "                                             "
+	echo " b)  Back                                    "
+	echo " m)  Back to main menu                       "
+	echo " q)  Quit                                    "
+	echo "_____________________________________________"
+	echo "                                             "
+}
+
+function handle_set_connection_states_input () {
+
+	CHOICE=$1
+
+	case $CHOICE in
+		"1")
+			echo ""
+			;;
+		"2")
+			echo ""
+			;;
+		"3")
+			echo ""
+			;;
+		"4")
+			menu_wait
+			source $LPD/src/main/connections/set_connection_states/single_connection_up/set_single_connection_menu
+			set_single_connection_menu
+			;;
+		"b")
+			menu_wait
+			connections_menu
+			;;
+		"m")
+			menu_wait
+			main_menu
+			;;
+		"q")
+			echo "Goodbye!"
+			menu_wait
+			exit 1
+			;;
+		*)
+			echo ""
+			echo "Please Enter A Valid Option."
+			echo ""
+			read -p "$CON_PROMPT" choice
+			handle_connection_option_input $choice
+			;;
+	esac
+
+}
+

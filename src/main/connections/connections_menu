@@ -1,0 +1,77 @@
+#!/bin/bash
+
+function connections_menu () {
+
+	connections_menu_display_options
+	
+	read -p "$CON_PROMPT" INPUT
+	
+	handle_connection_option_input $INPUT
+	
+}
+	
+function connections_menu_display_options () {
+	echo "                                             "
+	echo "  CONNECTIONS MENU                           "
+	echo "_____________________________________________"
+	echo "                                             "
+	echo " 1)  View Availlable Connections             "
+	echo " 2)  View Existing Connections               "
+	echo " 3)  Create Connection Or Connect To Network "
+	echo " 4)  Modify/Configure Existing Connections   "
+	echo " 5)  Set Existing Connection States          "
+	echo "_____________________________________________"
+	echo "                                             "
+	echo " m)  Back to main menu                       "
+	echo " q)  Quit                                    "
+	echo "_____________________________________________"
+	echo "                                             "
+}
+
+function handle_connection_option_input () {
+	
+	CHOICE=$1
+	
+	case $CHOICE in
+		"1")
+			echo ""
+			;;
+		"2")
+			echo ""
+			;;
+		"3")
+			echo ""
+			;;
+		"4")
+			echo ""
+			;;
+		"5")
+			echo "Youve Chosen this"
+			menu_wait
+			source $LPD/src/main/connections/set_connection_states/set_connection_states_menu
+			set_connection_states_menu
+			;;
+		"m")
+			menu_wait
+			main_menu
+			;;
+		"q")
+			echo "Goodbye!"
+			menu_wait
+			exit 1
+			;;
+		*)
+			echo ""
+			echo "Please Enter A Valid Option."
+			echo "" 
+			read -p "$CON_PROMPT" choice
+			handle_connection_option_input $choice
+			;;
+	esac
+
+}
+
+# create new connections
+# view existing
+# modify existing
+# Set States

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+LPD=/home/cos/dev/Projects/Listz
+
+if [[ ! -d "$LPD" ]];
+then
+	sudo find / -type d -iname "Listz" 2>/dev/null
+else
+	echo $LPD
+fi

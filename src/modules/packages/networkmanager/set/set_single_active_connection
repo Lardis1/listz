@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function set_single_active_connection () {
+	
+	TARGET=$1
+	IFS=$'\n'
+	CONNECTIONS=($(nmcli -t -f NAME con))	
+	
+	for CON in "${CONNECTIONS[@]}"
+	do
+		case "$CON" in 
+			"$TARGET")
+				handle_connection $CON up
+				;;
+			*)
+				handle_connection $CON down
+		esac
+	done
+}
+
+function handle_connection () {
+	
+	CON=$1
+	desired_state=$2
+	
+	con_is_active=$(nmcli con show --active | grep "$CON")
+	
+	# connection is not active
+	[[ -z "$con_is_active" && "$desired_state" == "up" ]] && nmcli con up $CON 2>&1 >/dev/null
+	# connection is active
+	[[ ! -z "$con_is_active" && "$desired_state" == "down" ]] && nmcli con down $CON 2>&1 >/dev/null
+}
+

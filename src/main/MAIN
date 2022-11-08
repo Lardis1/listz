@@ -1,0 +1,122 @@
+#!/bin/bash
+
+
+LPD=$(LPD)
+LPDsrc=$LPD/src
+LPDenv=$LPD/src/env/shell_sources
+
+source /home/cos/dev/Projects/Listz/src/modules/utils/shell_sources/* 
+source $LPDenv/prompts
+source $LPDenv/colors
+
+echo -e $MAIN_PROMPT
+
+function startup () {
+	clear
+	echo ""
+	echo ""
+	printf "\n         ________________   "
+	printf "\n        /               \ \ "
+	printf "\n       |                  | "
+	printf "\n  =========================="
+	printf "\n        |                |  "
+        printf "\n        |   +     +      |  "
+	printf "\n        |________________|  "
+	printf "\n  =========================="
+	echo   ""
+	echo   "         Listz - V1.1       "
+	echo   ""
+	echo   "  =========================="
+	echo ""
+}
+
+
+function main_menu () {
+
+	sleep 0.5
+	printf "\n    MAIN MENU               "
+	printf "\n____________________________"
+	printf "\n"
+	printf "\n 1)  Connections            "
+	printf "\n 2)  Devices                "
+	printf "\n 3)  Pen Testing Suite      "
+      	printf "\n 4)  Scanning               "
+        printf "\n 5)  Configurations         "
+        printf "\n 6)  Settings               "
+	printf "\n 7)  VPN                    "
+	printf "\n 8)  Quit                   "
+	printf "\n____________________________"
+	echo ""
+	echo ""
+	echo ""
+	sleep 0.3
+
+	read -p "$MAIN_PROMPT" choice
+
+	main_menu_handler $choice
+}
+
+
+function main_menu_handler () {
+
+	CHOICE=$1
+	
+	case "$CHOICE"  in
+		"1")
+			echo "You Have Selected The Connections Menu"
+			menu_wait
+			source $(LPD)/src/main/connections/*
+			connections_menu
+			;;
+		"2")
+			echo "You Have Selected The Devices Menu"
+			menu_wait
+			main_menu
+			;;
+		"3")
+			echo "You Have Selected The Pen Testing Suite Menu"
+			menu_wait
+			main_menu
+			;;
+		"4")
+			echo "You Have Selected the Scannin Menu"
+			menu_wait
+			main_menu
+			;;
+		"5")
+			echo "You have selected the Configurations Menu"
+			menu_wait
+			main_menu
+			;;
+		"6")
+			echo "You Have Selected The Settings Menu"
+			menu_wait
+			main_menu
+			;;
+		"7")
+			echo "You Have Selected The VPN Menu"
+			menu_wait
+			main_menu
+			;;
+		"8")
+			echo "You Have Chosen To Quit"
+			echo "Goodbye!"	
+			sleep 0.7
+			clear
+			exit 1
+			;;
+		*)
+			echo "Invalid Option"
+			menu_wait
+			main_menu
+			;;
+	esac
+}
+
+
+function main() {
+	startup
+	main_menu
+}
+
+main

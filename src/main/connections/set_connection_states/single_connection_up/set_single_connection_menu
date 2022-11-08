@@ -1,0 +1,112 @@
+#!/bin/bash
+
+function set_single_connection_menu () {
+
+	display_set_single_connection_options
+	read -p "$CON_SET_SOLE_PROMPT" CHOICE
+	handle_set_single_connection_input $CHOICE
+}
+
+function display_set_single_connection_options () {
+	echo "                                                   "
+	echo "  SET SOLE CONNECTION MENU                         "
+	echo "___________________________________________________"
+	echo "                                                   "
+	echo "  Choose A Connection To Be Your Active Connection "
+	echo "                                                   "
+	source $LPD/src/modules/packages/networkmanager/get/get_known_connections
+	display_connections_list
+	echo "_____________________________________________"
+	echo "                                             "
+	echo " b)  Back                                    "
+	echo " m)  Back to main menu                       "
+	echo " q)  Quit                                    "
+	echo "_____________________________________________"
+	echo "                                             "
+}
+
+function handle_set_single_connection_input () {
+
+	CHOICE=$1
+	IFS=$'\n'
+	CONNECTIONS=($(nmcli -t -f NAME con))
+	num_of_connections="${#CONNECTIONS[@]}"
+	if [[ "$CHOICE" == "q" ]];
+	then
+		echo "Goodbye ..."
+		exit 1
+	elif [[ $((CHOICE)) != $CHOICE || $((CHOICE)) -le 0 || $((CHOICE)) -gt $((num_of_connections)) ]]; 
+	then
+		echo "Invalid Choice"
+	else
+		TARGET="${CONNECTIONS[$((CHOICE - 1))]}"
+	
+		source $LPD/src/modules/packages/networkmanager/set/set_single_active_connection
+		set_single_active_connection $TARGET &
+		pid="$!"
+		# sleep 1.5
+		
+		wait_animation $pid 
+
+		#       "                      LOADING ANIMATION"
+		echo "                                                                                "
+		echo -e "${BOLD}${LIGHTGREEN} ++++ ! Complete ! ++++${NC}                             "
+		sleep 0.5
+		echo "_________________________________________________                               "
+		echo "                                                                                "
+		display_connections_list
+	       	echo "_________________________________________________                               "	
+		echo ""
+	fi
+
+	read -p "$CON_SET_SOLE_PROMPT" CHOICE
+	handle_set_single_connection_input $CHOICE	
+}
+
+function loading () {
+	case ${1} in 
+		1)
+			echo ""
+			echo " +--- Configuring Connections ---+ "
+			echo ""
+			;;
+		2)
+			echo ""
+			echo " -+-- Configuring Connections --+- "
+			echo ""
+			;;
+		3)
+			echo ""
+			echo " --+- Configuring Connections -+-- "
+			echo ""
+			;;
+		4)
+			echo ""
+			echo " ---+ Configuring Connections +--- "
+			echo ""
+			;;
+		5)
+			echo ""
+			echo " --+- Configuring Connections -+-- "
+			echo ""
+			;;
+		6)
+			echo ""
+			echo " -+-- Configuring Connections --+- "
+			echo ""
+			;;
+		esac
+	sleep 0.2
+}
+
+function wait_animation () {
+	
+	while [[ ! -z "$(ps -A | grep $1)" ]]
+	do
+		for i in $(seq 1 6); do
+			loading ${i}
+			echo -e "\033[4A"
+		done
+	done
+}
+
